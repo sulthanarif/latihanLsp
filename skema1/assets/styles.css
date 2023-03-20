@@ -1,0 +1,36 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-weight: bold;
+    margin: 0;
+  }
+  .container {
+    margin-top: 20px;
+    align-items: center;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  select {
+    padding: 10px;
+    font-size: 20px;
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+  }
+  option {
+    padding: 10px;
+    font-size: 18px;
+    color: #353535;
+    background-color: white;
+    border-bottom: 1px solid lightgray;
+  }
+  #result {
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-radius: 30px;
+    font-size: 18px;
+    text-align: left;
+  }
