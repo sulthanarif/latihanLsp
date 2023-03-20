@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-weight: bold;
+        margin: 0;
+      }
+      .container {
+        margin-top: 20px;
+        align-items: center;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      select {
+        padding: 10px;
+        font-size: 20px;
+        background-color: white;
+        border: none;
+        border-radius: 10px;
+      }
+      option {
+        padding: 10px;
+        font-size: 18px;
+        color: #353535;
+        background-color: white;
+        border-bottom: 1px solid lightgray;
+      }
+      #result {
+        background-color: #f2f2f2;
+        padding: 20px;
+        border-radius: 30px;
+        font-size: 18px;
+        text-align: left;
+      }
+      
+    </style>
+    <title>Number Sort</title>
+  </head>
+
+  <body>
+    <div class="container my-5">
+      <h2 class="text-center mb-5">Number Sort</h2>
+      <div class="row">
+        <div class="col-md-4 mx-auto">
+          <form>
+            <div class="form-group">
+              <label for="inputData">Input Data</label>
+              <input
+                type="text"
+                class="form-control"
+                id="inputData"
+                placeholder="Enter data separated by comma"
+              />
+            </div>
+            <div class="form-group">
+              <label for="sortType">Sort Type</label>
+              <select class="form-control" id="sortType">
+                <option value="sortType">Select Sort Type</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary btn-block animated pulse"
+              onclick="sortData()"
+            >
+              Sort 
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger btn-block"
+              onclick="clearData()"
+            >
+              Clear
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="row my-5">
+        <div class="col-md-4 mx-auto">
+          <p id="result" class="font-weight-bold"></p>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
