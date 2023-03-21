@@ -128,6 +128,13 @@ function tanyaKamar() {
   rl.question(
     "Masukkan tipe kamar (input dalam bentuk angka) : ",
     (tipeKamar) => {
+      if (tipeKamar < 1 || tipeKamar > 3) { // mengecek apakah tipe kamar valid
+        console.log("Input tidak valid!");
+        console.log("--------------");
+        tanyaKamar();
+        return;
+      }
+
       rl.question(
         "Masukkan lama menginap (dalam hari) : ",
         (lamaMenginap) => {
