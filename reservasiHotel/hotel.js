@@ -123,6 +123,8 @@ const rl = readline.createInterface({
 });
 
 let totalHarga = 0;
+let pemesanan = [];
+
 
 function tanyaKamar() {
   rl.question(
@@ -133,7 +135,7 @@ function tanyaKamar() {
         console.log("--------------");
         tanyaKamar();
         return;
-      }
+      }  
 
       rl.question(
         "Masukkan lama menginap (dalam hari) : ",
@@ -145,6 +147,14 @@ function tanyaKamar() {
           );
           const subTotalHarga = hargaMalam.harga * lamaMenginap;
           totalHarga += subTotalHarga;
+
+          // tambahkan pemesanan ke array
+          const pesanan = {
+            tipeKamar: convert,
+            lamaMenginap: lamaMenginap,
+            subTotalHarga: subTotalHarga,
+          };
+          pemesanan.push(pesanan);
 
           console.log(`Tipe Kamar: ${convert}`);
           console.log(`Lama Menginap: ${lamaMenginap} hari`);
@@ -163,8 +173,22 @@ function tanyaLanjut() {
       console.log("--------------");
       tanyaKamar();
     } else if (jawaban === "n") {
-      console.log("--------------");
+      console.log(``);
+
+      // tampilkan rincian pemesanan
+      if (pemesanan.length > 0) {
+        console.log("Rincian Pemesanan:");
+        for (let i = 0; i < pemesanan.length; i++) {
+          const pesanan = pemesanan[i];
+          console.log(`- Tipe Kamar: ${pesanan.tipeKamar}`);
+          console.log(`- Lama Menginap: ${pesanan.lamaMenginap} hari`);
+          console.log(`- Subtotal Harga: Rp ${pesanan.subTotalHarga}`);
+          console.log("--------------");
+        }
+        
+      }
       console.log(`Total Harga: Rp ${totalHarga}`);
+
       console.log("Terima kasih telah menggunakan layanan kami!");
       rl.close();
     } else {
@@ -174,5 +198,4 @@ function tanyaLanjut() {
   });
 }
 
-// memulai transaksi pertama kali
-tanyaKamar();
+tanyaKamar() 
