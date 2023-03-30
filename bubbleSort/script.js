@@ -1,38 +1,50 @@
+// function dynamicBubbleSort(data, sortType) {
+//     var n = data.length;
+//     for (var i = 0; i < n-1; i++) {
+//       var isSorted = true;
+//       for (var j = 0; j < n-i-1; j++) {
+        
+//         if (sortType === "asc") {
+//           if (data[j] > data[j+1]) {
+//             // swap data[j] and data[j+1]
+//             var temp = data[j];
+//             data[j] = data[j+1];
+//             data[j+1] = temp;
+//             isSorted = false;
+//           }
+//         } 
+        
+//         else if (sortType === "desc") {
+//           if (data[j] < data[j+1]) {
+//             // swap data[j] and data[j+1]
+//             var temp = data[j];
+//             data[j] = data[j+1];
+//             data[j+1] = temp;
+//             isSorted = false;
+//           }
+//         } else {
+//           console.log("Invalid sort type. Choose either 'asc' or 'desc'.");
+//           return data;
+//         }
+//       }
+//       if (isSorted) {
+//         break;
+//       }
+//     }
+//     return data;
+// }
+
 function dynamicBubbleSort(data, sortType) {
-    var n = data.length;
-    for (var i = 0; i < n-1; i++) {
-      var isSorted = true;
-      for (var j = 0; j < n-i-1; j++) {
-        
-        if (sortType === "asc") {
-          if (data[j] > data[j+1]) {
-            // swap data[j] and data[j+1]
-            var temp = data[j];
-            data[j] = data[j+1];
-            data[j+1] = temp;
-            isSorted = false;
-          }
-        } 
-        
-        else if (sortType === "desc") {
-          if (data[j] < data[j+1]) {
-            // swap data[j] and data[j+1]
-            var temp = data[j];
-            data[j] = data[j+1];
-            data[j+1] = temp;
-            isSorted = false;
-          }
-        } else {
-          console.log("Invalid sort type. Choose either 'asc' or 'desc'.");
-          return data;
-        }
-      }
-      if (isSorted) {
-        break;
-      }
-    }
+  if (sortType === "asc") {
+    return data.sort((a, b) => a - b);
+  } else if (sortType === "desc") {
+    return data.sort((a, b) => b - a);
+  } else {
+    console.log("Invalid sort type. Choose either 'asc' or 'desc'.");
     return data;
+  }
 }
+
 
 function calculateMean(data) {
     var sum = 0;

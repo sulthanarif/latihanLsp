@@ -27,6 +27,13 @@ body {
     background-color: white;
     border-bottom: 1px solid lightgray;
   }
+
+  button .btn-danger {
+    color: red;
+    border: 1px solid red;
+    background-color: #f2f2f2;
+
+  }
   #result {
     background-color: #f2f2f2;
     padding: 20px;
