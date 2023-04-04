@@ -20,15 +20,15 @@ class User {
   }
 
   // registermodel
-  static async RegisterModel(nama, email, password, no_hp, alamat, role) {
+  static async RegisterModel(nama, email, password, no_hp, alamat, role, create_at, update_at) {
     //query sql
-    const sqlQuery = "INSERT INTO person (nama, email, password, no_hp, alamat, role) VALUES (?, ?, ?, ?, ?, ?)";
+    const sqlQuery = "INSERT INTO person (nama, email, password, no_hp, alamat, role, create_at, update_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     try {
       const hasher = await hashPass(password);
 
       // Execute an SQL query to insert the user into the database
-      const user = await connectSql(sqlQuery, [nama, email, hasher, no_hp, alamat, role]);
+      const user = await connectSql(sqlQuery, [nama, email, hasher, no_hp, alamat, role, create_at, update_at]);
 
       if (user) {
         return 'user created';
@@ -40,79 +40,66 @@ class User {
   }
 
   // loginmodel
-    static async loginModel(email, password) {
-      try {
-        const user = await this.findUserByEmail(email);
-  
-        if (!user) {
-          return {
-            user: false,
-            valid: false,
-            token: null,
-            message: "Invalid email or password"
-          };
-        }
-  
-        const isValidPassword = await verifyPass(password, user.password);
-  
-        if (!isValidPassword) {
-          return {
-            user: false,
-            valid: false,
-            token: null,
-            message: "Invalid email or password"
-          };
-        }
-  
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_KEY);
-        return {
-          user: true,
-          valid: true,
-          token,
-          message: "Login success"
-        };
-      } catch (err) {
-        console.error(err);
-        throw new Error("An error occurred while processing the request");
-      }
-    }
-    
-  // find user by email
-  static async findUserByEmail(email) {
+  static async LoginModel(email, password) {
     try {
-      const sqlQuery = 'SELECT * FROM person WHERE email = ? LIMIT 1';
-      const [user] = await connectSql(sqlQuery, [email]);
-      return user;
+      // find user
+      const user = await this.FindUserByEmail(email);
+      let hashedToken;
+
+      if (user) {
+        hashedToken = user.password;
+        const role = user.role;
+        console.log(role);
+        const valid = await verifyPass(password, hashedToken);
+
+        if (!valid) {
+          return {
+            user: false,
+            valid,
+            token: null,
+            message: "wrong password"
+          }
+        }
+
+        if (valid) {
+          const token = jwt.sign({ userId: user.id }, process.env.JWT_KEY);
+    
+          return {
+            user: true,
+            valid,
+            token,
+            role: role,
+            message: "Login success"
+          }
+        }
+      }
     } catch (err) {
-      console.error(err);
-      throw new Error("An error occurred while processing the request");
+      throw new Error("User not found");
     }
   }
 
-// check user email exists
-  static async CheckEmailExists(email) {
-    let sqlQuery = "SELECT COUNT(*) as count FROM person WHERE email = ?";
-    let count;
-  
+  // find user by email
+  static async FindUserByEmail(email) {
+    let sqlQuery = 'SELECT * FROM person WHERE email = ?';
+    let resultUser;
+
     try {
-      const result = await connectSql(sqlQuery, [email]);
-      count = result[0].count;
+      const user = await connectSql(sqlQuery, [email]);
+      resultUser = user[0];
+      return resultUser;
     } catch (err) {
-      throw new Error(`Error in CheckEmailExists: ${err}`);
+      throw new Error(`Error in findUserByEmail: ${err}`);
     }
-  
-    return count > 0;
   }
-  
+
   // show profile model
   static async ShowProfileModel(id) {
-    let sqlQuery = 'SELECT * FROM person WHERE id = 2';
+    let sqlQuery = 'SELECT * FROM person WHERE id = ?';
     let resultUser;
     // console.log(sqlQuery);
 
     try {
       const user = await connectSql(sqlQuery, [id]);
-      console.log(user)
       const results = user[0];
       resultUser = new User(results.nama, results.email, results.password, results.no_hp, results.alamat, results.role, results.create_at, results.update_at);
 
@@ -122,6 +109,54 @@ class User {
       throw new Error(`Error in findUserById: ${err}`);
     }
 
+  }
+
+  // search customers
+  static async SearchUserModel(q) {
+    let sqlQuery = `SELECT * FROM person WHERE nama LIKE '%${q}%' AND role = 'user'`;
+
+    try {
+      const response = await connectSql(sqlQuery, [q]);
+
+      if (response) {
+        return response;
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  // show customers
+  static async ShowUsersModel() {
+    const sqlQuery = `SELECT * FROM person WHERE role = 'user'`;
+
+    try {
+      const response = await connectSql(sqlQuery);
+      
+      let datas = [];
+      let data;
+
+      response.forEach((i) => {
+        data = new User(
+          i.nama,
+          i.email,
+          i.password,
+          i.no_hp,
+          i.alamat,
+          i.role,
+          i.create_at,
+          i.update_at
+        );
+
+        datas.push(data);
+
+      });
+
+      return datas;
+
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 }
 

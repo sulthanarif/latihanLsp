@@ -8,18 +8,16 @@ class userController {
   // register
   static async RegisterController(req, res) {
     try {
-      const { nama, email, password, no_hp, alamat, } = req.body;
-      const role = "user";
+      const { nama, email, password, no_hp, alamat, role } = req.body;
+      const {created_at, updated_at} = "current_timestamp()";
+
+      const emailExists = await User.CheckEmailExists(email);
+      if (emailExists) {
+        return res.status(400).json({
+          message: "User already exists",
+        });
+      }
       
-       // Check if email already exists
-    const emailExists = await User.CheckEmailExists(email);
-    if (emailExists) {
-      return res.status(400).json({
-        message: "User already exists",
-      });
-    }
-
-
       // Create a new user
       const userId = await User.RegisterModel(
         nama,
@@ -28,6 +26,8 @@ class userController {
         no_hp,
         alamat,
         role,
+        created_at,
+        updated_at
       );
 
       res.status(200).json({
@@ -45,10 +45,10 @@ class userController {
     const { email, password } = req.body;
 
     try {
-      const result = await User.loginModel(email, password);
+      const result = await User.LoginModel(email, password);
 
       if (result.token && result.valid) {
-        res.header("token-auth", result.token).status(200).json(result);
+        res.status(200).json(result);
       } else {
         res.status(400).json(result);
       }
@@ -62,11 +62,12 @@ class userController {
   }
 
   // checkuser
-  static async checkUser(req, res) {
+  static async CheckUser(req, res) {
     const { email } = req.body;
 
     try {
       const result = await User.findUserByEmail(email);
+
       if (result) {
         res.status(200).json({
           message: "user found",
@@ -83,13 +84,39 @@ class userController {
 
   // show profile
   static async ShowProfileController(req, res) {
-    const userId = req.user.id;
-    console.log(userId);
+    const { userId } = req;
 
     try {
-      const result = await User.ShowProfileModel(userId);
+      const result = await User.ShowProfileModel(+userId);
 
       res.status(200).json({ message: result });
+    } catch (err) {
+      res.status(500).json({ message: err });
+    }
+  }
+
+  // show customers
+  static async ShowUsersController(req, res) {
+    try {
+      const result = await User.ShowUsersModel();
+      if (result) {
+        res.status(200).json({ message: result})
+      }
+    } catch (err) {
+      res.status(500).json({ message: err });
+    }
+  }
+
+  // search users
+  static async SearchUsersController(req, res) {
+    const nama_user = req.query.nama_user;
+
+    try {
+      const result = await User.SearchUserModel(nama_user);
+
+      if (result) {
+        res.status(200).json({ message: result });
+      }
     } catch (err) {
       res.status(500).json({ message: err });
     }

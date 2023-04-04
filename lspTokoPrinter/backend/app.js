@@ -10,6 +10,7 @@ const app = express();
 // init other modules
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
 
 // init router
 const { router } = require('./Router/Router');
@@ -22,21 +23,16 @@ let originOptionsCors = {
     origin: `http://localhost:${port}`
 };
 
-app.use(
-    cors({
-        origin : '*',
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-        preflightContinue : false,
-        optionsSuccessStatus: 204,
-    })
-);
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(fileUpload());
+app.use('/uploads', express.static("uploads"));
+// app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // routing
 app.use('/', router)
 
+
 // port connection
-app.listen(port, () => console.log(`Server Connected on port ${port}`));
+app.listen(port, () => `koneksi port ${port}`);
