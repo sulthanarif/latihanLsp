@@ -104,7 +104,6 @@ class PrinterController {
   static async DeleteProductController(req, res) {
     const { id } = req.params;
     const productResult = await Printer.GetProductsByIdModel(+id);
-    console.log(productResult);
 
     try {
       const fileGambarUrl = `./uploads/${productResult.gambar}`;
@@ -119,6 +118,7 @@ class PrinterController {
       res.status(500).json({ message: err });
     }
   }
+
 
   // search
   static async SearchProductController(req, res) {
